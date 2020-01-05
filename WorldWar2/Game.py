@@ -1,7 +1,10 @@
 import pygame
 pygame.init()
 
-win = pygame.display.set_mode((1500, 800))
+windowWidth = 1200
+windowHeight = 850
+
+win = pygame.display.set_mode((windowWidth, windowHeight))
 pygame.display.set_caption("World War 2")
 
 x = 50
@@ -18,13 +21,13 @@ while run:
                 run = False
 
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_LEFT] and x > 0:
             x -= vel
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_RIGHT] and x < windowWidth - width:
             x += vel
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_UP] and y > 0:
             y -= vel
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_DOWN] and y < windowHeight - height:
             y += vel
 
         win.fill((0,0,0))
