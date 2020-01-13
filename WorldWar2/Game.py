@@ -61,7 +61,7 @@ class projectile(object):
         self.radius = radius
         self.color = color
         self.facing = facing
-        self.vel = 3 * facing
+        self.vel = 10 * facing
 
     def draw (self, win):
         pygame.draw.circle(win, self.color, (self.x,self.y), self.radius)
@@ -69,31 +69,54 @@ class projectile(object):
 def redrawGameWindow():
     win.blit(bg, (0, 0))
     player.draw(win)
+    for bullet in bullets:
+        bullet.draw(win)
+
     pygame.display.update()
 
 
 # mainloop
 player = player(10, 10, 40, 40)
+bullets = []
 run = True
 while run:
     clock.tick(30)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+
+    for bullet in bullets:
+        if bullet.x < 1280 and bullet.x > 0:
+            bullet.x += bullet.vel
+        else:
+            bullets.pop(bullets.index(bullet))
+
     keys = pygame.key.get_pressed()
+    if keys[pygame.K_SPACE]:
+        if player.sLeft:
+            facing = -1
+        else:
+            facing = 1
+
+        if len(bullets) < 1:
+            bullets.append(projectile(player.x + player.width //2, round(player.y + player.height//2), 3, (0,0,0), facing))
     if keys[pygame.K_LEFT] and player.x:
         player.x -= player.vel
         player.left = True
         player.right = False
         player.sRight = False
-        player.sLeft = True
+        player.sLeft = False
     elif keys[pygame.K_RIGHT] and player.x < windowWidth - player.width:
         player.x += player.vel
         player.left = False
         player.right = True
-        player.sRight = True
+        player.sRight = False
         player.sLeft = False
     else:
+        if(player.right):
+            player.sRight = True
+        elif(player.left):
+            player.sLeft = True
         player.right = False
         player.left = False
     if keys[pygame.K_UP] and player.y > 0:
